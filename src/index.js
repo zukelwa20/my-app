@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import './index.css';
 
 class Board extends React.Component {
@@ -15,13 +16,13 @@ class Board extends React.Component {
     const { squares } = this.props;
     const { winSquares } = squares;
 
-    for (let i = 1; i <= 3; i++) {
+    for (let r = 1; r <= 3; r++) {
       let row = [];
 
-      for (let m = 1; m <= 3; m++) {
+      for (let c = 1; c <= 3; c++) {
         let winner = winSquares && winSquares.indexOf(number) != -1 ? true : false;
 
-        row.push(this.renderSquare(number, i, m, winner, squares[i]));
+        row.push(this.renderSquare(number, r, c, winner, squares[number]));
         number++;
       }
 
@@ -45,16 +46,16 @@ class App extends React.Component {
     };
   }
 
-  handleClick (i, row, col) {
+  handleClick (number, row, col) {
     let history = this.state.history;
     let current = history[history.length - 1];
     let squares = current.squares.slice();
 
-    if (calculateWinner(squares) || squares[i]) {
+    if (calculateWinner(squares) || squares[number]) {
       return;
     }
 
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    squares[number] = this.state.xIsNext ? 'X' : 'O';
 
     this.setNextBoard(history, squares, row, col);
   }
@@ -128,7 +129,7 @@ class App extends React.Component {
     return (
       <div className="game">
         <div className="game-board">
-          <Board squares={current.squares} onClick={this.handleClick}/>
+          <Board squares={current.squares} onClick={this.handleClick.bind(this)}/>
         </div>
 
         <div className="game-info">
